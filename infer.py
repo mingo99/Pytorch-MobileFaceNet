@@ -15,7 +15,7 @@ parser = argparse.ArgumentParser(description=__doc__)
 add_arg = functools.partial(add_arguments, argparser=parser)
 add_arg('image_path',               str,     'dataset/test.jpg',                 '预测图片路径')
 add_arg('face_db_path',             str,     'face_db',                          '人脸库路径')
-add_arg('threshold',                float,   0.6,                                '判断相识度的阈值')
+add_arg('threshold',                float,   0.5,                                '判断相识度的阈值')
 add_arg('mobilefacenet_model_path', str,     'save_model/mobilefacenet.pth',     'MobileFaceNet预测模型的路径')
 add_arg('mtcnn_model_path',         str,     'save_model/mtcnn',                 'MTCNN预测模型的路径')
 args = parser.parse_args()
@@ -137,6 +137,9 @@ class Predictor:
         cv2.imshow("result", img)
         cv2.waitKey(0)
 
+    def print_net(self):
+        from torchsummary import summary
+        summary(self.model, (3, 500, 500))
 
 if __name__ == '__main__':
     predictor = Predictor(args.mtcnn_model_path, args.mobilefacenet_model_path, args.face_db_path, threshold=args.threshold)
